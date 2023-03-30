@@ -1,10 +1,14 @@
 const mongoose = require('mongoose');
 
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/googlebooks', {
+require("dotenv").config(); // To use environment variables.
+
+mongoose.set('strictQuery', false);
+
+// Wrap Mongoose around local connection to MongoDB.
+mongoose.connect(process.env.MONGODB_URI || process.env.MONGODB_LOCAL, {
   useNewUrlParser: true,
-  useUnifiedTopology: true,
-  useCreateIndex: true,
-  useFindAndModify: false,
+  useUnifiedTopology: true
 });
 
+// Export connection 
 module.exports = mongoose.connection;
