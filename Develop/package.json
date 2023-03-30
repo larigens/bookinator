@@ -1,16 +1,30 @@
 {
-  "name": "googlebooks-app",
+  "name": "bookinator",
   "version": "1.0.0",
-  "description": "",
+  "description": "Book Search Engine",
   "main": "server/server.js",
   "scripts": {
     "start": "node server/server.js",
     "develop": "concurrently \"cd server && npm run watch\" \"cd client && npm start\"",
     "install": "cd server && npm i && cd ../client && npm i",
+    "seed": "cd server && npm run seed",
     "build": "cd client && npm run build"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "react",
+    "nodejs",
+    "expressjs",
+    "apollo",
+    "graphql",
+    "jwt",
+    "mongodb",
+    "mongoose"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/larigens/bookinator.git"
+  },
+  "author": "Larissa Guilherme",
   "license": "ISC",
   "devDependencies": {
     "concurrently": "^5.1.0"
