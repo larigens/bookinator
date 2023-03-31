@@ -19,7 +19,9 @@ class AuthService {
   isTokenExpired(token) {
     try {
       const decoded = decode(token);
-      return decoded.exp < Date.now() / 1000;
+      if (decoded.exp < Date.now() / 1000) {
+        return true;
+      } else return false;
     } catch (err) {
       throw new Error('Failed to decode token: ' + err.message);
     }
@@ -27,18 +29,18 @@ class AuthService {
 
   getToken() {
     // Retrieves the user token from localStorage
-    return localStorage.getItem('token_id');
+    return localStorage.getItem('id_token');
   }
 
   login(idToken) {
     // Saves user token to localStorage
-    localStorage.setItem('token_id', idToken);
+    localStorage.setItem('id_token', idToken);
     window.location.assign('/');
   }
 
   logout() {
     // Clear user token and profile data from localStorage
-    localStorage.removeItem('token_id');
+    localStorage.removeItem('id_token');
     // this will reload the page and reset the state of the application
     window.location.assign('/');
   }

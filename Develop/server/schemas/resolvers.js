@@ -1,33 +1,10 @@
-import { AuthenticationError } from 'apollo-server-express';
-import User from '../models/index.mjs';
-import { signToken } from '../utils/auth.mjs';
+const { AuthenticationError } = require('apollo-server-express');
+const { User } = require('../models/index.js');
+const { signToken } = require('../utils/auth');
 
 const resolvers = {
     Query: {
-        getSingleUser: async (_, { userId, username }) => {
-            try {
-                if (userId && username) {
-                    throw new Error('Please provide only one of userId or username!');
-                } else if (userId) {
-                    return await User.findOne({ _id: userId });
-                } else if (username) {
-                    return await User.findOne({ username });
-                } else {
-                    throw new Error('Please provide either a userId or a username!');
-                }
-            } catch (err) {
-                throw new Error(`Failed to fetch user: ${err.message}`);
-            }
-        },
-        users: async () => {
-            try {
-                const users = await User.find();
-                return users;
-            } catch (err) {
-                throw new Error(`Failed to fetch user: ${err.message}`);
-            }
-        },
-        me: async (_, args, context) => {
+        me: async (parent, args, context) => {
             if (context.user) {
                 return User.findOne({ _id: context.user._id })
                     .select('-password')
@@ -37,7 +14,7 @@ const resolvers = {
         },
     },
     Mutation: {
-        login: async (_, { email, password }) => {
+        login: async (parent, { email, password }) => {
             try {
                 const user = await User.findOne({ email });
                 if (!user) {
@@ -53,17 +30,16 @@ const resolvers = {
                 throw new Error(`Failed to login. ${err.message}`);
             }
         },
-        createUser: async (_, { input }) => {
+        addUser: async (parent, { username, email, password }) => {
             try {
-                const { name, email, password } = input;
-                const user = await User.create({ name, email, password });
+                const user = await User.create({ username, email, password });
                 const token = signToken(user);
                 return { token, user };
             } catch (err) {
                 throw new Error(`Failed to add user: ${err.message}`);
             }
         },
-        saveBook: async (_, { bookInput }, context) => {
+        saveBook: async (parent, { bookInput }, context) => {
             if (context.user) {
                 try {
                     const user = await User.findOneAndUpdate(
@@ -78,7 +54,7 @@ const resolvers = {
             }
             throw new AuthenticationError('You are not logged in!');
         },
-        deleteBook: async (_, { bookId }, context) => {
+        removeBook: async (parent, { bookId }, context) => {
             if (context.user) {
                 try {
                     const user = await User.findOneAndUpdate(
@@ -96,5 +72,4 @@ const resolvers = {
     },
 };
 
-
-export default resolvers
+module.exports = resolvers;

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Col, Form, Button, Card } from 'react-bootstrap';
+import { Container, Col, Row, Form, Button, Card } from 'react-bootstrap';
 import { useMutation } from '@apollo/client';
 import { SAVE_BOOK } from '../utils/mutations';
 import { GET_ME } from '../utils/queries';
@@ -69,7 +69,7 @@ const SearchBooks = () => {
 
     try {
       const data = await saveBook({
-        variables: { bookData: bookToSave },
+        variables: { bookToSave },
         update: (cache, { data }) => {
           const { me } = cache.readQuery({ query: GET_ME });
           cache.writeQuery({
@@ -80,6 +80,7 @@ const SearchBooks = () => {
           setSavedBookIds([...savedBookIds, bookToSave.bookId]);
         },
       });
+      console.log(data)
     } catch (err) {
       console.error(err);
     }
@@ -93,7 +94,7 @@ const SearchBooks = () => {
             <Container>
               <h1>Search for Books!</h1>
               <Form onSubmit={handleFormSubmit}>
-                <Form.Row>
+                <Row>
                   <Col xs={12} md={8}>
                     <Form.Control
                       name='searchInput'
@@ -109,7 +110,7 @@ const SearchBooks = () => {
                       Submit Search
                     </Button>
                   </Col>
-                </Form.Row>
+                </Row>
               </Form>
             </Container>
           </Container>

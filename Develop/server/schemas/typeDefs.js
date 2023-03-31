@@ -1,8 +1,9 @@
-import gql from 'graphql-tag';
+const { gql } = require('apollo-server-express');
 
 const typeDefs = gql`
 type Book {
-    bookId: ID!
+    _id: ID!
+    bookId: String!
     authors: [String]
     description: String!
     title: String!
@@ -27,28 +28,20 @@ input BookInput {
     link: String
 }
   
-input UserInput {
-    username: String!
-    email: String!
-    password: String!
-}
-  
 type Auth {
     token: ID!
     user: User!
 }  
 
 type Query {
-    getSingleUser(userId: ID!): User
-    users: [User]
     me: User
 }
   
 type Mutation {
     login(email: String!, password: String!): Auth
-    createUser(input: UserInput!): Auth
+    addUser(username: String!, email: String!, password: String!): Auth
     saveBook(bookInput: BookInput!): User
-    deleteBook(bookId: ID!): User
+    removeBook(bookId: ID!): User
 }  
 `
-export default typeDefs;
+module.exports = typeDefs;
